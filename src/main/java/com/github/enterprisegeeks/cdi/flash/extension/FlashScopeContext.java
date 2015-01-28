@@ -1,4 +1,4 @@
-package jp.co.ulsystems.cdi.flash.extension;
+package com.github.enterprisegeeks.cdi.flash.extension;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -9,7 +9,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.servlet.http.HttpSession;
 
-import jp.co.ulsystems.cdi.flash.FlashScoped;
+import com.github.enterprisegeeks.cdi.flash.FlashScoped;
 
 /**
  * Context Defination of FlashScope

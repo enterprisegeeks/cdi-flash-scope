@@ -1,4 +1,4 @@
-package jp.co.ulsystems.cdi.flash.extension;
+package com.github.enterprisegeeks.cdi.flash.extension;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,4 +1,4 @@
-package jp.co.ulsystems.cdi.flash.extension;
+package com.github.enterprisegeeks.cdi.flash.extension;
 
 import java.util.logging.Logger;
 import javax.enterprise.event.Observes;
@@ -6,7 +6,7 @@ import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
-import jp.co.ulsystems.cdi.flash.FlashScoped;
+import com.github.enterprisegeeks.cdi.flash.FlashScoped;
 
 /**
  * CDI Extention Point for Flash Scopd

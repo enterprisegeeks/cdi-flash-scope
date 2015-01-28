@@ -1,4 +1,4 @@
-package jp.co.ulsystems.cdi.flash;
+package com.github.enterprisegeeks.cdi.flash;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
