@@ -7,6 +7,7 @@ import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
+import javax.servlet.http.HttpSession;
 
 import jp.co.ulsystems.cdi.flash.FlashScoped;
 
@@ -17,12 +18,9 @@ public class FlashScopeContext implements Context,Serializable {
     
     private static final Logger LOG = Logger.getLogger(
             FlashScopeContext.class.getPackage().getName());
- 
-    private final FlashContextHolder beanHolder;
- 
+    
     public FlashScopeContext() {
         LOG.fine("FlashScopeContext Init");
-        beanHolder = FlashContextHolder.getInstance();
     }
  
     @Override
@@ -46,6 +44,7 @@ public class FlashScopeContext implements Context,Serializable {
     @Override
     public <T> T get(Contextual<T> cntxtl, CreationalContext<T> cc) {
         Bean<T> bean = (Bean<T>) cntxtl;
+        FlashContextHolder beanHolder = getHolder();
         if (beanHolder.containsBean(bean)) {
             return beanHolder.getBean(bean).getInstance();
         }
@@ -64,12 +63,28 @@ public class FlashScopeContext implements Context,Serializable {
      */
     @Override
     public <T> T get(Contextual<T> cntxtl) {
-         Bean<T> bean = (Bean<T>) cntxtl;
+        Bean<T> bean = (Bean<T>) cntxtl;
+        FlashContextHolder beanHolder = getHolder();
         if (beanHolder.containsBean(bean)) {
             return beanHolder.getBean(bean).getInstance();
         }
         return null;
     }
     
+    private FlashContextHolder getHolder() {
+        HttpSession session = RequestHolder.get().getSession();
+        
+        String key = FlashContextHolder.class.getCanonicalName();
+        
+        Object obj = session.getAttribute(key);
+        if (obj != null) {
+            return (FlashContextHolder)obj;
+        }
+        
+        FlashContextHolder holder = new FlashContextHolder();
+        session.setAttribute(key, holder);
+        
+        return holder;
+    }
     
 }

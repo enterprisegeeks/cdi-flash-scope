@@ -12,10 +12,6 @@ public class FlashContextHolder {
     
     private final Map<Class, FlashInstance> holder = new ConcurrentHashMap<>();
     
-    public static FlashContextHolder getInstance() {
-        return Singleton.instance;
-    }
-    
     public <T> FlashInstance<T> getBean(Bean<T> bean) {
         return holder.get(bean.getBeanClass());
     }
@@ -39,10 +35,6 @@ public class FlashContextHolder {
     void destroyBean(FlashInstance flashInstance) {
         holder.remove(flashInstance.bean.getBeanClass());
         flashInstance.bean.destroy(flashInstance.instance, flashInstance.ctx);
-    }
-    
-    private static class Singleton {    
-        public static final FlashContextHolder instance = new FlashContextHolder();
     }
     
     public static class FlashInstance<T> {
