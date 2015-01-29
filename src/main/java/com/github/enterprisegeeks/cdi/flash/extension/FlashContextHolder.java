@@ -55,10 +55,12 @@ public class FlashContextHolder {
          * @param callSendRedirect  
          */
         public void mark(boolean callSendRedirect) {
-            if (!sendRedirect || callSendRedirect) {
+            // sendRedirect on , if first request is redirect
+            if (!sendRedirect && callSendRedirect) {
                 sendRedirect = true;
                 return;
             }
+            // is second request end?
             if (sendRedirect) { 
                 endRedirect = true;
             }
