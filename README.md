@@ -26,7 +26,7 @@ This provides CDI custom flash scope that is active during POST request and next
             <repository>
                 <id>whatever you like</id>
                 <name>whatever you like</name>
-                <url>https://github.com/enterprisegeeks/cdi-flash-scope/tree/mvn-repo</url>
+                <url>https://raw.github.com/enterprisegeeks/cdi-flash-scope/mvn-repo</url>
             </repository>
             <!-- -->
         </repositories>
