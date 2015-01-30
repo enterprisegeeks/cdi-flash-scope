@@ -5,10 +5,8 @@
  */
 package com.github.enterprisegeeks.cdi.flash.scope.servlet;
 
-import com.github.enterprisegeeks.cdi.flash.FlashScoped;
 import com.github.enterprisegeeks.cdi.flash.scope.bean.FlashBean;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +32,7 @@ public class RedirectServlet extends HttpServlet {
         
         bean.setMessage(message);
         
-        response.sendRedirect("welcome");
+        response.sendRedirect("index.jsp");
         
     }
 }

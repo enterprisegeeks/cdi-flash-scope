@@ -2,6 +2,8 @@ package com.github.enterprosegeeks.cdi.flash.scope.servlet;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.ArrayList;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -43,7 +45,8 @@ public class FlashScopeTest {
             .addAsLibraries(jars)
             .addPackage("com.github.enterprisegeeks.cdi.flash.scope.bean")
             .addPackage("com.github.enterprisegeeks.cdi.flash.scope.servlet")
-            .addAsWebInfResource(new File(webinf, "beans.xml"));
+            .addAsWebInfResource(new File(webinf, "beans.xml"))
+            .addAsWebResource(new File("src/main/webapp/index.jsp"));
         
         System.out.println(war.toString(true));
         
@@ -52,16 +55,17 @@ public class FlashScopeTest {
     
     @Test
     @RunAsClient
-    public void on_access_welcome_flashBean_is_empty() throws Exception {
+    public void on_accessDirectJsp_flashBean_is_empty() throws Exception {
                 try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             
             
-            HttpGet welocme = new HttpGet(url + "welcome");
+            HttpGet welocme = new HttpGet(url + "index.jsp");
             try (CloseableHttpResponse response = httpClient.execute(welocme)) {
                 HttpEntity entity = response.getEntity();
                 String body =EntityUtils.toString(entity, StandardCharsets.UTF_8);
                 
-                assertThat(body, is("null"));
+                assertThat(response.getStatusLine().getStatusCode(), is(200));
+                assertThat(body, containsString("<div></div>"));
             }
         }
     }
@@ -77,16 +81,17 @@ public class FlashScopeTest {
             try (CloseableHttpResponse response = httpClient.execute(get)) {
                 HttpEntity entity = response.getEntity();
                 String body =EntityUtils.toString(entity, StandardCharsets.UTF_8);
-                
-                assertThat(body, is("flash"));
+                assertThat(response.getStatusLine().getStatusCode(), is(200));
+                assertThat(body, containsString("<div>flash</div>"));
             }
             
-            HttpGet reload = new HttpGet(url + "welcome");
+            HttpGet reload = new HttpGet(url + "index.jsp");
             try (CloseableHttpResponse response = httpClient.execute(reload)) {
                 HttpEntity entity = response.getEntity();
                 String body =EntityUtils.toString(entity, StandardCharsets.UTF_8);
                 
-                assertThat(body, is("null"));
+                assertThat(response.getStatusLine().getStatusCode(), is(200));
+                assertThat(body, containsString("<div></div>"));
             }
         }
     }
@@ -105,15 +110,17 @@ public class FlashScopeTest {
                 HttpEntity entity = response.getEntity();
                 String body =EntityUtils.toString(entity, StandardCharsets.UTF_8);
                 
-                assertThat(body, is("redirect"));
+                assertThat(response.getStatusLine().getStatusCode(), is(200));
+                assertThat(body, containsString("<div>redirect</div>"));
             }
             
-            HttpGet reload = new HttpGet(url + "welcome");
+            HttpGet reload = new HttpGet(url + "index.jsp");
             try (CloseableHttpResponse response = httpClient.execute(reload)) {
                 HttpEntity entity = response.getEntity();
                 String body =EntityUtils.toString(entity, StandardCharsets.UTF_8);
                 
-                assertThat(body, is("null"));
+                assertThat(response.getStatusLine().getStatusCode(), is(200));
+                assertThat(body, containsString("<div></div>"));
             }
         }
     }

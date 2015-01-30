@@ -32,7 +32,7 @@ public class GetServlet extends HttpServlet {
         
         bean.setMessage(message);
         
-        request.getRequestDispatcher("welcome").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
         
     }
 }
