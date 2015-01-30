@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Filter for FlashScope context.
@@ -34,26 +35,31 @@ public class FlashContextFilter implements Filter{
         LOG.fine("FlashScopedFilter start");
         
         HttpServletRequest req = (HttpServletRequest) request;
-        RequestHolder.set(req);
+        HttpSession session = req.getSession();
+        String key = FlashContextBeanStore.class.getCanonicalName();
+        FlashContextBeanStore beanStore = (FlashContextBeanStore)session.getAttribute(key);
+        if (beanStore == null) {
+            beanStore = new FlashContextBeanStore();
+            session.setAttribute(key, beanStore);
+        }
+        // pass store to context 
+        BeanStoreHolder.set(beanStore);
         
         chain.doFilter(request, response);
         
         // update flash scope beans;
         HttpServletResponse res = (HttpServletResponse) response;
-        String key = FlashContextHolder.class.getCanonicalName();
-        FlashContextHolder holder = (FlashContextHolder)req.getSession().getAttribute(key);
-        if (holder != null) {
-            for(FlashContextHolder.FlashInstance i : holder.getBeans().values()) {
-                i.mark(res.getStatus() == HttpServletResponse.SC_FOUND);
+        
+        for(FlashContextBeanStore.FlashInstance i : beanStore.getBeans().values()) {
+            i.mark(res.getStatus() == HttpServletResponse.SC_FOUND);
 
-                if (i.isDestory()) {
-                    LOG.fine("FlashScopedFilter destory bean");
-                    holder.destroyBean(i);
-                }
+            if (i.isDestory()) {
+                LOG.fine("FlashScopedFilter destory bean");
+                beanStore.destroyBean(i);
             }
         }
-
-        RequestHolder.remove();
+        
+        BeanStoreHolder.remove();
 
         LOG.fine("FlashScopedFilter end");
         

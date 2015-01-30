@@ -6,18 +6,18 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 
 /**
- * Bean Holder in Flash Scope 
+ * Bean Store in Flash Scope 
  */
-public class FlashContextHolder {
+public class FlashContextBeanStore {
     
-    private final Map<Class, FlashInstance> holder = new ConcurrentHashMap<>();
+    private final Map<Class, FlashInstance> store = new ConcurrentHashMap<>();
     
     public <T> FlashInstance<T> getBean(Bean<T> bean) {
-        return holder.get(bean.getBeanClass());
+        return store.get(bean.getBeanClass());
     }
  
     public boolean containsBean(Bean bean) {
-        return holder.containsKey(bean.getBeanClass());
+        return store.containsKey(bean.getBeanClass());
     }
     
     public <T> void  putBean(Bean<T> bean, CreationalContext<T> cc, T instance) {
@@ -25,15 +25,15 @@ public class FlashContextHolder {
         fi.bean = bean;
         fi.ctx = cc;
         fi.instance = instance;
-        holder.put(bean.getBeanClass(), fi);
+        store.put(bean.getBeanClass(), fi);
     }
  
     Map<Class, FlashInstance> getBeans(){
-        return this.holder;
+        return this.store;
     }
     
     void destroyBean(FlashInstance flashInstance) {
-        holder.remove(flashInstance.bean.getBeanClass());
+        store.remove(flashInstance.bean.getBeanClass());
         flashInstance.bean.destroy(flashInstance.instance, flashInstance.ctx);
     }
     

@@ -7,7 +7,6 @@ import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
-import javax.servlet.http.HttpSession;
 
 import com.github.enterprisegeeks.cdi.flash.FlashScoped;
 
@@ -44,7 +43,7 @@ public class FlashScopeContext implements Context,Serializable {
     @Override
     public <T> T get(Contextual<T> cntxtl, CreationalContext<T> cc) {
         Bean<T> bean = (Bean<T>) cntxtl;
-        FlashContextHolder beanHolder = getHolder();
+        FlashContextBeanStore beanHolder = getBeanStore();
         if (beanHolder.containsBean(bean)) {
             return beanHolder.getBean(bean).getInstance();
         }
@@ -64,27 +63,16 @@ public class FlashScopeContext implements Context,Serializable {
     @Override
     public <T> T get(Contextual<T> cntxtl) {
         Bean<T> bean = (Bean<T>) cntxtl;
-        FlashContextHolder beanHolder = getHolder();
+        FlashContextBeanStore beanHolder = getBeanStore();
         if (beanHolder.containsBean(bean)) {
             return beanHolder.getBean(bean).getInstance();
         }
         return null;
     }
     
-    private FlashContextHolder getHolder() {
-        HttpSession session = RequestHolder.get().getSession();
+    private FlashContextBeanStore getBeanStore() {
         
-        String key = FlashContextHolder.class.getCanonicalName();
-        
-        Object obj = session.getAttribute(key);
-        if (obj != null) {
-            return (FlashContextHolder)obj;
-        }
-        
-        FlashContextHolder holder = new FlashContextHolder();
-        session.setAttribute(key, holder);
-        
-        return holder;
+        return BeanStoreHolder.get();
     }
     
 }

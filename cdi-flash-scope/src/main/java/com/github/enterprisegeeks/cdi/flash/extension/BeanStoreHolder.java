@@ -5,22 +5,20 @@
  */
 package com.github.enterprisegeeks.cdi.flash.extension;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
- * Request holder
+ * BeanStore holder
  */
-public class RequestHolder {
+public class BeanStoreHolder {
     
-    private static final ThreadLocal<HttpServletRequest> holder = new ThreadLocal<>();
+    private static final ThreadLocal<FlashContextBeanStore> holder = new ThreadLocal<>();
     
-    private RequestHolder(){}
+    private BeanStoreHolder(){}
     
-    public static void set(HttpServletRequest req) {
+    public static void set(FlashContextBeanStore req) {
         holder.set(req);
     }
     
-    public static HttpServletRequest get() {
+    public static FlashContextBeanStore get() {
         return holder.get();
     }
     
