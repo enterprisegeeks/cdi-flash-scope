@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
  * 
  * this manage to Desoroty FlashScoped beans. 
  */
-@WebFilter(urlPatterns = "/*", description = "FlashScope manage filter")
+@WebFilter(urlPatterns = "/*", description = "FlashScope manage filter", asyncSupported = true)
 public class FlashContextFilter implements Filter{
 
     private static final Logger LOG 
@@ -44,8 +44,11 @@ public class FlashContextFilter implements Filter{
         }
         // pass store to context 
         BeanStoreHolder.set(beanStore);
-        
-        chain.doFilter(request, response);
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            BeanStoreHolder.remove();
+        }
         
         // update flash scope beans;
         HttpServletResponse res = (HttpServletResponse) response;
@@ -59,7 +62,6 @@ public class FlashContextFilter implements Filter{
             }
         }
         
-        BeanStoreHolder.remove();
 
         LOG.fine("FlashScopedFilter end");
         
